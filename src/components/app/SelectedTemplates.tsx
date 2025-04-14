@@ -29,9 +29,13 @@ export function SelectedTemplates({ templates, activeId }: SelectedTemplatesProp
         <div
             id="selected-templates"
             ref={setNodeRef}
-            className="relative bg-white overflow-y-auto h-[calc(100vh-14rem)] rounded-md"
+            className={`relative bg-white overflow-y-auto h-[calc(100vh-14rem)] rounded-md transition-all duration-200 ease-in-out ${activeId ? 'bg-opacity-95' : ''}`}
         >
-            <div className={`h-full ${isOver ? "border-2 border-dashed border-gray-300 m-5 rounded-lg" : "p-5"}`}>
+            <div
+                className={`h-full transition-all duration-200 ease-in-out
+                    ${isOver ? "border-2 border-dashed border-gray-300 m-5 rounded-lg bg-gray-50/30" : "p-5"}
+                `}
+            >
                 {templates.length === 0 ? (
                     <div className="flex flex-col h-full items-center justify-center text-gray-400">
                         <p className="flex flex-col items-center justify-center text-lg">
@@ -46,10 +50,15 @@ export function SelectedTemplates({ templates, activeId }: SelectedTemplatesProp
                                 <div
                                     key={template.id}
                                     id={`selected-template-${template.id}`}
-                                    className="relative"
+                                    className={`relative transition-transform duration-200 ease-in-out ${activeId && activeId !== template.id ? 'opacity-50' : ''
+                                        }`}
+                                    style={{
+                                        zIndex: activeId === template.id ? 20 : 1,
+                                        transform: `translateY(0)`,
+                                    }}
                                 >
                                     {isOver && activeId && index === 0 && (
-                                        <div className="absolute inset-x-0 -top-3 border-t-2 border-dashed border-gray-300 z-10" />
+                                        <div className="absolute inset-x-0 -top-3 border-t-2 border-dashed border-gray-300" />
                                     )}
                                     <TemplateCard
                                         template={template}
@@ -57,7 +66,7 @@ export function SelectedTemplates({ templates, activeId }: SelectedTemplatesProp
                                         rootCanal={true}
                                     />
                                     {isOver && activeId && (
-                                        <div className="absolute inset-x-0 -bottom-3 border-t-2 border-dashed border-gray-300 z-10" />
+                                        <div className="absolute inset-x-0 -bottom-3 border-t-2 border-dashed border-gray-300" />
                                     )}
                                 </div>
                             ))}
