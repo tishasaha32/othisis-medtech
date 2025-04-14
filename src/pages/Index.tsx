@@ -1,4 +1,5 @@
 import Navbar from '@/components/app/Navbar'
+import ButtonSection from '@/components/app/ButtonSection'
 import TemplateManager from '@/components/app/TemplateManager'
 
 const Index = () => {
@@ -6,6 +7,7 @@ const Index = () => {
         <div>
             <Navbar />
             <TemplateManager />
+            <ButtonSection />
         </div>)
 }
 
