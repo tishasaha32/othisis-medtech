@@ -11,16 +11,15 @@ import {
     useSensors,
     closestCenter,
     DragOverlay,
+    DragStartEvent,
+    DragEndEvent,
 } from "@dnd-kit/core";
 import { Button } from "../ui/button";
+import { arrayMove } from "@dnd-kit/sortable";
 
 const TemplateManager = () => {
     const [activeId, setActiveId] = useState<string | null>(null);
-    const [selectedTemplates, setSelectedTemplates] = useState<TemplateData[]>(
-        []
-    );
-    const [availableTemplates, setAvailableTemplates] =
-        useState<TemplateData[]>(templateData);
+    const [selectedTemplates, setSelectedTemplates] = useState<TemplateData[]>([]);
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -29,58 +28,73 @@ const TemplateManager = () => {
         })
     );
 
-    function handleDragStart(event: any) {
+    function handleDragStart(event: DragStartEvent) {
         const { active } = event;
-        setActiveId(active.id);
+        setActiveId(active.id.toString());
     }
 
-    function handleDragEnd(event: any) {
+    function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         setActiveId(null);
 
         if (!over) return;
 
-        // Handle dropping from available to selected
-        if (over.id === "selected-templates-droppable") {
-            const draggedTemplate = availableTemplates.find(
-                (t) => t.id === active.id
-            );
-            // Check if template already exists in selectedTemplates
-            if (
-                draggedTemplate &&
-                !selectedTemplates.some((t) => t.id === active.id)
-            ) {
-                setSelectedTemplates([
-                    ...selectedTemplates,
-                    {
-                        ...draggedTemplate,
-                        position: selectedTemplates.length, // Add position for ordering
-                    },
-                ]);
+        const isNewTemplate = !selectedTemplates.some((t) => t.id === active.id);
+        const draggedTemplate = isNewTemplate
+            ? templateData.find((t) => t.id === active.id)
+            : selectedTemplates.find((t) => t.id === active.id);
+
+        if (!draggedTemplate) return;
+
+        // Handle dropping in selected templates area
+        if (over.id === "selected-templates-droppable" || over.id.toString().startsWith("selected-template-")) {
+            let targetIndex;
+
+            if (over.id === "selected-templates-droppable") {
+                // If dropping in the container, calculate position based on pointer
+                const overRect = (over.rect as DOMRect);
+                const pointerY = (event.activatorEvent as PointerEvent).clientY;
+                const relativeY = pointerY - overRect.top;
+                const templateHeight = overRect.height / (selectedTemplates.length + 1);
+
+                targetIndex = selectedTemplates.length;
+                for (let i = 0; i < selectedTemplates.length; i++) {
+                    const templateTop = overRect.top + (i * templateHeight);
+                    if (relativeY < templateTop + templateHeight / 2) {
+                        targetIndex = i;
+                        break;
+                    }
+                }
+            } else {
+                // If dropping on a template, insert at that position
+                const targetId = over.id.toString().replace("selected-template-", "");
+                targetIndex = selectedTemplates.findIndex((t) => t.id === targetId);
+                if (targetIndex === -1) return;
             }
-            return;
-        }
 
-        // Handle reordering within selected templates
-        if (over.id.toString().startsWith("selected-template-")) {
-            const sourceIndex = selectedTemplates.findIndex(
-                (t) => t.id === active.id
-            );
-            if (sourceIndex === -1) return;
+            let newTemplates = [...selectedTemplates];
 
-            const targetId = over.id.toString().replace("selected-template-", "");
-            const targetIndex = selectedTemplates.findIndex((t) => t.id === targetId);
-            if (targetIndex === -1) return;
+            if (isNewTemplate) {
+                // Insert new template
+                newTemplates.splice(targetIndex, 0, {
+                    ...draggedTemplate,
+                    position: targetIndex,
+                });
+            } else {
+                // Reorder existing template
+                const sourceIndex = selectedTemplates.findIndex((t) => t.id === active.id);
+                if (sourceIndex === -1) return;
 
-            // Don't reorder if dropping on the same item
-            if (sourceIndex === targetIndex) return;
+                // Adjust target index if moving down
+                if (sourceIndex < targetIndex) {
+                    targetIndex--;
+                }
 
-            const reorderedTemplates = [...selectedTemplates];
-            const [movedTemplate] = reorderedTemplates.splice(sourceIndex, 1);
-            reorderedTemplates.splice(targetIndex, 0, movedTemplate);
+                newTemplates = arrayMove(selectedTemplates, sourceIndex, targetIndex);
+            }
 
-            // Update positions
-            const updatedTemplates = reorderedTemplates.map((template, index) => ({
+            // Update positions for all templates
+            const updatedTemplates = newTemplates.map((template, index) => ({
                 ...template,
                 position: index,
             }));
@@ -93,12 +107,8 @@ const TemplateManager = () => {
         setActiveId(null);
     }
 
-    // const toggleSidebar = () => {
-    //     setSidebarOpen(!sidebarOpen);
-    // };
-
     const activeTemplate = activeId
-        ? [...availableTemplates, ...selectedTemplates].find(
+        ? [...templateData, ...selectedTemplates].find(
             (t) => t.id === activeId
         )
         : null;
@@ -128,8 +138,9 @@ const TemplateManager = () => {
                             <Trash2 className="w-5 h-5 text-destructive" />
                         </div>
                     </div>
-                    <SelectedTemplates templates={selectedTemplates} />
+                    <SelectedTemplates templates={selectedTemplates} activeId={activeId} />
                 </div>
+
                 <DragOverlay>
                     {activeId ? (
                         <div className="opacity-80 bg-white rounded-md shadow-md">
