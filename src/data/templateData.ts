@@ -40,6 +40,21 @@ const templateData: TemplateData[] = [
     title: "Treatment",
     content: ["Proposed root canal treatment plan", "Toothache for few days"],
   },
+  {
+    id: "8",
+    title: "Prognosis",
+    content: ["Expected outcome of the treatment", "Toothache for few days"],
+  },
+  {
+    id: "9",
+    title: "Recommendations",
+    content: ["Recommendations for the patient", "Toothache for few days"],
+  },
+  {
+    id: "10",
+    title: "References",
+    content: ["References for the treatment", "Toothache for few days"],
+  },
 ];
 
 export default templateData;

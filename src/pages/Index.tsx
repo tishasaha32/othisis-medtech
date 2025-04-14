@@ -1,8 +1,10 @@
+import Navbar from '@/components/app/Navbar'
 import TemplateManager from '@/components/app/TemplateManager'
 
 const Index = () => {
     return (
-        <div className="min-h-screen">
+        <div>
+            <Navbar />
             <TemplateManager />
         </div>)
 }
