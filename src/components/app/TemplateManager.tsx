@@ -1,8 +1,11 @@
-import React from 'react'
+import templateData from "@/data/templateData"
+import { AvailableTemplates } from "./AvailableTemplates"
 
 const TemplateManager = () => {
     return (
-        <div>TemplateManager</div>
+        <div>
+            <AvailableTemplates templates={templateData} />
+        </div>
     )
 }
 
