@@ -104,7 +104,7 @@ const TemplateManager = () => {
         : null;
 
     return (
-        <div className="flex gap-4 h-[calc(100vh-5rem)]">
+        <div className="flex gap-4 h-[calc(100vh-7rem)] px-20 pt-5">
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -122,7 +122,7 @@ const TemplateManager = () => {
                         <div className="flex gap-3 items-center cursor-pointer">
                             <Button variant="outline" className="flex gap-2 rounded-lg border-1 border-black">
                                 <Mic className="w-5 h-5" />
-                                Resume
+                                <p className="text-xs font-semibold">Resume</p>
                             </Button>
                             <Upload className="w-5 h-5" />
                             <Trash2 className="w-5 h-5 text-destructive" />

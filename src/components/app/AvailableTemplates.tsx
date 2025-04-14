@@ -21,7 +21,7 @@ export function AvailableTemplates({ templates }: AvailableTemplatesProps) {
         <div
             id="available-templates"
             ref={setNodeRef}
-            className="relative flex flex-col h-[calc(100vh-5rem)] border rounded-md bg-gray-200 p-2"
+            className="relative flex flex-col h-[calc(100vh-8rem)] border rounded-md bg-gray-200 p-2"
         >
             <h3 className="text-2xl text-center font-semibold p-4">Templates</h3>
             <div className="flex-1 overflow-y-auto">

@@ -27,7 +27,7 @@ export function SelectedTemplates({ templates }: SelectedTemplatesProps) {
         <div
             id="selected-templates"
             ref={setNodeRef}
-            className={`bg-white overflow-y-auto border-2 h-[calc(100vh-10rem)] rounded-md p-5 ${isOver ? "border-dashed border-blue-500 bg-blue-50" : "border-gray-300"
+            className={`bg-white overflow-y-auto border-2 h-[calc(100vh-14rem)] rounded-md p-5 ${isOver ? "border-dashed border-blue-500 bg-blue-50" : "border-gray-300"
                 }`}
         >
             {templates.length === 0 ? (
