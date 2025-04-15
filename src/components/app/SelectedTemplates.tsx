@@ -5,7 +5,8 @@ import { Reorder } from "framer-motion";
 import { useState, RefObject } from "react";
 import type { CardItem } from "@/components/app/DraggableCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { FilePlus, Info, Mic, Trash2, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
 interface CardInstance extends CardItem {
     instanceId: string;
 }
@@ -62,13 +63,28 @@ export const SelectedTemplates = () => {
     return (
         <div
             ref={drop as unknown as RefObject<HTMLDivElement>}
-            className={`w-full md:w-1/2 bg-muted/30 rounded-lg p-4 min-h-[300px] transition-colors ${isOver ? "bg-muted/50" : ""
+            className={`w-full md:w-2/3 bg-gray-200 h-[calc(100vh-10rem)] rounded-lg p-4 transition-colors ${isOver ? "bg-muted/50" : ""
                 }`}
         >
-            <h2 className="text-xl font-semibold mb-4">Right Sidebar</h2>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl flex items-center gap-2 font-semibold">
+                    Root Canal
+                    <Info className="w-6 h-6" />
+                </h2>
+                <div className="flex items-center gap-2">
+                    <Button variant="outline" className="border-black">
+                        <Mic className="w-4 h-4" />
+                        Resume
+                    </Button>
+                    <Upload className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                </div>
+
+            </div>
 
             {droppedCards.length === 0 && !isOver ? (
-                <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg">
+                <div className="flex flex-col  items-center justify-center h-[90%] bg-white rounded-lg p-6">
+                    <FilePlus size={60} className="text-muted-foreground" />
                     <p className="text-muted-foreground">Drop cards here</p>
                 </div>
             ) : (
@@ -76,23 +92,23 @@ export const SelectedTemplates = () => {
                     axis="y"
                     values={droppedCards}
                     onReorder={setDroppedCards}
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-3 bg-white p-6 h-[calc(100vh-15rem)] overflow-y-scroll"
                 >
                     {droppedCards.map((card, index) => (
                         <div key={card.instanceId} data-card-index={index}>
                             {isDraggingFromLeft && previewIndex === index && (
-                                <div className="h-[100px] bg-primary/10 border-2 border-dashed border-primary rounded-lg transition-all mb-2" />
+                                <div className="bg-primary/10 border-2 border-dashed border-primary rounded-lg transition-all mb-2" />
                             )}
                             <Reorder.Item
                                 key={card.instanceId}
                                 value={card}
                                 className="cursor-grab active:cursor-grabbing"
                             >
-                                <Card>
-                                    <CardHeader>
+                                <Card className="p-2 bg-gray-100">
+                                    <CardHeader className="p-2 pb-0">
                                         <CardTitle>{card.title}</CardTitle>
                                     </CardHeader>
-                                    <CardContent>
+                                    <CardContent className="p-2 pt-0">
                                         <ul className="list-disc list-inside">
                                             {card.description.map((item, index) => (
                                                 <li key={index}>{item}</li>

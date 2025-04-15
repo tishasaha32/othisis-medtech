@@ -31,9 +31,9 @@ export const DraggableCard = ({
             ref={drag as unknown as React.RefObject<HTMLDivElement>}
             className={`cursor-grab ${isDragging ? "opacity-50" : "opacity-100"}`}
         >
-            <Card className="w-full">
+            <Card className="w-full p-0 bg-gray-100">
                 <CardHeader className="p-3">
-                    <CardTitle className="text-base">{card.title}</CardTitle>
+                    <CardTitle className="text-base text-center">{card.title}</CardTitle>
                 </CardHeader>
                 {showDescription && (
                     <CardContent className="p-3 pt-0">

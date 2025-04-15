@@ -39,6 +39,31 @@ const templateData: TemplateData[] = [
     title: "Card 5",
     description: ["First bullet point for Card 5"],
   },
+  {
+    id: "card6",
+    title: "Card 6",
+    description: ["First bullet point for Card 6"],
+  },
+  {
+    id: "card7",
+    title: "Card 7",
+    description: ["First bullet point for Card 7"],
+  },
+  {
+    id: "card8",
+    title: "Card 8",
+    description: ["First bullet point for Card 8"],
+  },
+  {
+    id: "card9",
+    title: "Card 9",
+    description: ["First bullet point for Card 9"],
+  },
+  {
+    id: "card10",
+    title: "Card 10",
+    description: ["First bullet point for Card 10"],
+  },
 ];
 
 export default templateData;

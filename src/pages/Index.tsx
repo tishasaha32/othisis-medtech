@@ -8,7 +8,7 @@ const Index = () => {
     return (
         <div>
             <Navbar />
-            <div className='flex'>
+            <div className='flex gap-4 px-10 pt-10'>
                 <AvailableTemplates cards={templateData} />
                 <SelectedTemplates />
             </div>
