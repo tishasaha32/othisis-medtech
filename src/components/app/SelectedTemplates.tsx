@@ -141,7 +141,7 @@ export const SelectedTemplates = () => {
                         <div key={card.instanceId} data-card-index={index}>
                             {isDraggingFromLeft && previewIndex === index && hoveredItem && (
                                 <div className="mb-2">
-                                    <Card className="p-2 bg-[#ECECEC]">
+                                    <Card className="p-2 bg-white w-2/3">
                                         <CardHeader className="p-2 pb-0">
                                             <CardTitle>{hoveredItem.title}</CardTitle>
                                         </CardHeader>
