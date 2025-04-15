@@ -1,54 +1,70 @@
-# React + TypeScript + Vite
+# Othisis MedTech
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for medical template management with drag-and-drop functionality.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Before you begin, ensure you have the following installed:
 
-## Expanding the ESLint configuration
+- Node.js (v16 or higher)
+- npm (v7 or higher) or yarn
+- Git
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Installation
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/othisis-medtech.git
+cd othisis-medtech
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Using npm
+npm install
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+# Or using yarn
+yarn install
 ```
+
+## Running the Application
+
+1. Start the development server:
+
+```bash
+# Using npm
+npm run dev
+
+# Or using yarn
+yarn dev
+```
+
+2. Open your browser and navigate to:
+
+```
+http://localhost:5173
+```
+
+## Project Structure
+
+```
+othisis-medtech/
+├── public/             # Static assets
+│   ├── components/     # React components
+│   ├── lib/           # Utility functions and configurations
+│   ├── styles/        # Global styles
+│   └── App.tsx        # Root component
+├── .env               # Environment variables
+├── index.html         # HTML template
+├── package.json       # Project dependencies and scripts
+└── vite.config.ts     # Vite configuration
+```
+
+## Features
+
+- Drag-and-drop interface for template management
+- Real-time preview of templates
+- Modern UI with Tailwind CSS
+- TypeScript support

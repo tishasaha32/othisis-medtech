@@ -20,7 +20,7 @@ export const DraggableCard = ({
 }: DraggableCardProps) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "CARD",
-        item: { ...card, source }, // Include the source in the dragged item
+        item: { ...card, source },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),

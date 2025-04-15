@@ -1,10 +1,10 @@
 import { useDrop } from "react-dnd";
 import { Reorder } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { useState, RefObject, useRef, useEffect } from "react";
 import type { CardItem } from "@/components/app/DraggableCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FilePlus, Info, Mic, Trash2, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CardInstance extends CardItem {
     instanceId: string;
@@ -28,7 +28,7 @@ export const SelectedTemplates = () => {
                 const scrollAmount = direction === 'up' ? -10 : 10;
                 scrollContainerRef.current.scrollTop += scrollAmount;
             }
-        }, 16); // ~60fps
+        }, 16);
     };
 
     const stopAutoScroll = () => {
@@ -160,7 +160,7 @@ export const SelectedTemplates = () => {
                                 value={card}
                                 className="cursor-grab active:cursor-grabbing"
                             >
-                                <Card className="p-2 bg-[#ECECEC]">
+                                <Card className="p-2 bg-[#ECECEC] w-2/3">
                                     <CardHeader className="p-2 pb-0">
                                         <CardTitle>{card.title}</CardTitle>
                                     </CardHeader>
@@ -177,7 +177,7 @@ export const SelectedTemplates = () => {
                     ))}
                     {isDraggingFromLeft && previewIndex === droppedCards.length && hoveredItem && (
                         <div>
-                            <Card className="p-2 bg-[#ECECEC] bg-opacity-50">
+                            <Card className="p-2 bg-[#ECECEC] bg-opacity-50 w-2/3">
                                 <CardHeader className="p-2 pb-0">
                                     <CardTitle>{hoveredItem.title}</CardTitle>
                                 </CardHeader>

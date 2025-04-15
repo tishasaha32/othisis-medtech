@@ -1,8 +1,8 @@
 import Index from './pages/Index'
-import { Sidebar } from './components/app/Sidebar';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { DndProvider } from 'react-dnd'
+import { Sidebar } from './components/app/Sidebar';
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
   return (
