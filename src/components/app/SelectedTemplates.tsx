@@ -1,5 +1,3 @@
-"use client";
-
 import { useDrop } from "react-dnd";
 import { Reorder } from "framer-motion";
 import { useState, RefObject } from "react";
@@ -7,6 +5,7 @@ import type { CardItem } from "@/components/app/DraggableCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FilePlus, Info, Mic, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 interface CardInstance extends CardItem {
     instanceId: string;
 }
@@ -15,15 +14,16 @@ export const SelectedTemplates = () => {
     const [droppedCards, setDroppedCards] = useState<CardInstance[]>([]);
     const [previewIndex, setPreviewIndex] = useState<number | null>(null);
     const [isDraggingFromLeft, setIsDraggingFromLeft] = useState(false);
+    const [hoveredItem, setHoveredItem] = useState<CardItem | null>(null);
 
     const [{ isOver }, drop] = useDrop({
         accept: "CARD",
         hover: (item: CardItem & { source: "left" | "right" }, monitor) => {
             if (!monitor.isOver({ shallow: true })) return;
 
-            // Only handle preview if dragging from left
             if (item.source === "left") {
                 setIsDraggingFromLeft(true);
+                setHoveredItem(item);
 
                 const mouseY = monitor.getClientOffset()?.y;
                 const cardPositions = document.querySelectorAll("[data-card-index]");
@@ -44,8 +44,7 @@ export const SelectedTemplates = () => {
         },
         drop: (item: CardItem & { source: "left" | "right" }) => {
             const instanceId = `${item.id}-${Date.now()}`;
-            const insertAt =
-                previewIndex !== null ? previewIndex : droppedCards.length;
+            const insertAt = previewIndex !== null ? previewIndex : droppedCards.length;
             const newCard: CardInstance = { ...item, instanceId };
 
             const updated = [...droppedCards];
@@ -54,6 +53,7 @@ export const SelectedTemplates = () => {
 
             setPreviewIndex(null);
             setIsDraggingFromLeft(false);
+            setHoveredItem(null);
         },
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
@@ -79,11 +79,10 @@ export const SelectedTemplates = () => {
                     <Upload className="w-4 h-4" />
                     <Trash2 className="w-4 h-4 text-destructive" />
                 </div>
-
             </div>
 
             {droppedCards.length === 0 && !isOver ? (
-                <div className="flex flex-col  items-center justify-center h-[90%] bg-white rounded-lg p-6">
+                <div className="flex flex-col items-center justify-center h-[90%] bg-white rounded-lg p-6">
                     <FilePlus size={60} className="text-muted-foreground" />
                     <p className="text-muted-foreground">Drop cards here</p>
                 </div>
@@ -96,8 +95,21 @@ export const SelectedTemplates = () => {
                 >
                     {droppedCards.map((card, index) => (
                         <div key={card.instanceId} data-card-index={index}>
-                            {isDraggingFromLeft && previewIndex === index && (
-                                <div className="bg-primary/10 border-2 border-dashed border-primary rounded-lg transition-all mb-2" />
+                            {isDraggingFromLeft && previewIndex === index && hoveredItem && (
+                                <div className="mb-2">
+                                    <Card className="p-2 bg-gray-100 opacity-50">
+                                        <CardHeader className="p-2 pb-0">
+                                            <CardTitle>{hoveredItem.title}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-2 pt-0">
+                                            <ul className="list-disc list-inside">
+                                                {hoveredItem.description.map((item, idx) => (
+                                                    <li key={idx}>{item}</li>
+                                                ))}
+                                            </ul>
+                                        </CardContent>
+                                    </Card>
+                                </div>
                             )}
                             <Reorder.Item
                                 key={card.instanceId}
@@ -110,8 +122,8 @@ export const SelectedTemplates = () => {
                                     </CardHeader>
                                     <CardContent className="p-2 pt-0">
                                         <ul className="list-disc list-inside">
-                                            {card.description.map((item, index) => (
-                                                <li key={index}>{item}</li>
+                                            {card.description.map((item, idx) => (
+                                                <li key={idx}>{item}</li>
                                             ))}
                                         </ul>
                                     </CardContent>
@@ -119,8 +131,21 @@ export const SelectedTemplates = () => {
                             </Reorder.Item>
                         </div>
                     ))}
-                    {isDraggingFromLeft && previewIndex === droppedCards.length && (
-                        <div className="h-[100px] bg-primary/10 border-2 border-dashed border-primary rounded-lg transition-all" />
+                    {isDraggingFromLeft && previewIndex === droppedCards.length && hoveredItem && (
+                        <div>
+                            <Card className="p-2 bg-gray-100 opacity-50">
+                                <CardHeader className="p-2 pb-0">
+                                    <CardTitle>{hoveredItem.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-2 pt-0">
+                                    <ul className="list-disc list-inside">
+                                        {hoveredItem.description.map((item, idx) => (
+                                            <li key={idx}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </CardContent>
+                            </Card>
+                        </div>
                     )}
                 </Reorder.Group>
             )}
