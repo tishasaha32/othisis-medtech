@@ -1,59 +1,43 @@
 const templateData: TemplateData[] = [
   {
-    id: "1",
-    title: "Subjective",
-    content: ["For periodontal", "Toothache for few days"],
-  },
-  {
-    id: "2",
-    title: "History of Presenting Complaint",
-    content: ["Detailed as given by the client", "Toothache for few days"],
-  },
-  {
-    id: "3",
-    title: "Intra-Oral Examination",
-    content: ["For periodontal", "Toothache for few days"],
-  },
-  {
-    id: "4",
-    title: "Inter-Oral Examination",
-    content: [
-      "Periodontal examination results go here",
-      "Toothache for few days",
+    id: "card1",
+    title: "Card 1",
+    description: [
+      "First bullet point for Card 1",
+      "Second bullet point for Card 1",
+      "Third bullet point for Card 1",
     ],
   },
   {
-    id: "5",
-    title: "Radiographic Findings",
-    content: [
-      "X-ray analysis to confirm source of infection",
-      "Toothache for few days",
+    id: "card2",
+    title: "Card 2",
+    description: [
+      "First bullet point for Card 2",
+      "Second bullet point for Card 2",
     ],
   },
   {
-    id: "6",
-    title: "Diagnosis",
-    content: ["Examination-based diagnosis", "Toothache for few days"],
+    id: "card3",
+    title: "Card 3",
+    description: [
+      "First bullet point for Card 3",
+      "Second bullet point for Card 3",
+      "Third bullet point for Card 3",
+      "Fourth bullet point for Card 3",
+    ],
   },
   {
-    id: "7",
-    title: "Treatment",
-    content: ["Proposed root canal treatment plan", "Toothache for few days"],
+    id: "card4",
+    title: "Card 4",
+    description: [
+      "First bullet point for Card 4",
+      "Second bullet point for Card 4",
+    ],
   },
   {
-    id: "8",
-    title: "Prognosis",
-    content: ["Expected outcome of the treatment", "Toothache for few days"],
-  },
-  {
-    id: "9",
-    title: "Recommendations",
-    content: ["Recommendations for the patient", "Toothache for few days"],
-  },
-  {
-    id: "10",
-    title: "References",
-    content: ["References for the treatment", "Toothache for few days"],
+    id: "card5",
+    title: "Card 5",
+    description: ["First bullet point for Card 5"],
   },
 ];
 

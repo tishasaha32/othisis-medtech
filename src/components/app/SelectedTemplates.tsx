@@ -1,79 +1,113 @@
-import { FileUp } from "lucide-react";
-import { useDroppable } from "@dnd-kit/core";
-import { TemplateCard } from "./TemplateCard";
-import { useAutoScroll } from "@/hooks/useAutoScroll";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+"use client";
 
-type SelectedTemplatesProps = {
-    templates: TemplateData[];
-    activeId: string | null;
-};
+import { useDrop } from "react-dnd";
+import { Reorder } from "framer-motion";
+import { useState, RefObject } from "react";
+import type { CardItem } from "@/components/app/DraggableCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function SelectedTemplates({ templates, activeId }: SelectedTemplatesProps) {
-    const { setNodeRef, isOver } = useDroppable({
-        id: "selected-templates-droppable",
-        data: {
-            accepts: ["template"]
-        }
+interface CardInstance extends CardItem {
+    instanceId: string;
+}
+
+export const SelectedTemplates = () => {
+    const [droppedCards, setDroppedCards] = useState<CardInstance[]>([]);
+    const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+    const [isDraggingFromLeft, setIsDraggingFromLeft] = useState(false);
+
+    const [{ isOver }, drop] = useDrop({
+        accept: "CARD",
+        hover: (item: CardItem & { source: "left" | "right" }, monitor) => {
+            if (!monitor.isOver({ shallow: true })) return;
+
+            // Only handle preview if dragging from left
+            if (item.source === "left") {
+                setIsDraggingFromLeft(true);
+
+                const mouseY = monitor.getClientOffset()?.y;
+                const cardPositions = document.querySelectorAll("[data-card-index]");
+                let newIndex = droppedCards.length;
+
+                for (let i = 0; i < cardPositions.length; i++) {
+                    const el = cardPositions[i] as HTMLElement;
+                    const rect = el.getBoundingClientRect();
+
+                    if (mouseY! < rect.top + rect.height / 2) {
+                        newIndex = i;
+                        break;
+                    }
+                }
+
+                setPreviewIndex(newIndex);
+            }
+        },
+        drop: (item: CardItem & { source: "left" | "right" }) => {
+            const instanceId = `${item.id}-${Date.now()}`;
+            const insertAt =
+                previewIndex !== null ? previewIndex : droppedCards.length;
+            const newCard: CardInstance = { ...item, instanceId };
+
+            const updated = [...droppedCards];
+            updated.splice(insertAt, 0, newCard);
+            setDroppedCards(updated);
+
+            setPreviewIndex(null);
+            setIsDraggingFromLeft(false);
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+        }),
     });
-
-    // Use auto-scroll when dragging over this container
-    useAutoScroll("selected-templates", isOver);
-
-    // Sort templates by position if available
-    const sortedTemplates = [...templates].sort((a, b) =>
-        (a.position ?? Number.MAX_SAFE_INTEGER) - (b.position ?? Number.MAX_SAFE_INTEGER)
-    );
 
     return (
         <div
-            id="selected-templates"
-            ref={setNodeRef}
-            className={`relative bg-white overflow-y-auto h-[calc(100vh-14rem)] rounded-md transition-all duration-200 ease-in-out ${activeId ? 'bg-opacity-95' : ''}`}
+            ref={drop as unknown as RefObject<HTMLDivElement>}
+            className={`w-full md:w-1/2 bg-muted/30 rounded-lg p-4 min-h-[300px] transition-colors ${isOver ? "bg-muted/50" : ""
+                }`}
         >
-            <div
-                className={`h-full transition-all duration-200 ease-in-out
-                    ${isOver ? "border-2 border-dashed border-gray-300 m-5 rounded-lg bg-gray-50/30" : "p-5"}
-                `}
-            >
-                {templates.length === 0 ? (
-                    <div className="flex flex-col h-full items-center justify-center text-gray-400">
-                        <p className="flex flex-col items-center justify-center text-lg">
-                            <FileUp size={50} />
-                            Drag templates here
-                        </p>
-                    </div>
-                ) : (
-                    <SortableContext items={sortedTemplates.map(t => t.id)} strategy={verticalListSortingStrategy}>
-                        <div className="space-y-3">
-                            {sortedTemplates.map((template, index) => (
-                                <div
-                                    key={template.id}
-                                    id={`selected-template-${template.id}`}
-                                    className={`relative transition-transform duration-200 ease-in-out ${activeId && activeId !== template.id ? 'opacity-50' : ''
-                                        }`}
-                                    style={{
-                                        zIndex: activeId === template.id ? 20 : 1,
-                                        transform: `translateY(0)`,
-                                    }}
-                                >
-                                    {isOver && activeId && index === 0 && (
-                                        <div className="absolute inset-x-0 -top-3 border-t-2 border-dashed border-gray-300" />
-                                    )}
-                                    <TemplateCard
-                                        template={template}
-                                        isDraggable={true}
-                                        rootCanal={true}
-                                    />
-                                    {isOver && activeId && (
-                                        <div className="absolute inset-x-0 -bottom-3 border-t-2 border-dashed border-gray-300" />
-                                    )}
-                                </div>
-                            ))}
+            <h2 className="text-xl font-semibold mb-4">Right Sidebar</h2>
+
+            {droppedCards.length === 0 && !isOver ? (
+                <div className="flex items-center justify-center h-32 border-2 border-dashed rounded-lg">
+                    <p className="text-muted-foreground">Drop cards here</p>
+                </div>
+            ) : (
+                <Reorder.Group
+                    axis="y"
+                    values={droppedCards}
+                    onReorder={setDroppedCards}
+                    className="flex flex-col gap-3"
+                >
+                    {droppedCards.map((card, index) => (
+                        <div key={card.instanceId} data-card-index={index}>
+                            {isDraggingFromLeft && previewIndex === index && (
+                                <div className="h-[100px] bg-primary/10 border-2 border-dashed border-primary rounded-lg transition-all mb-2" />
+                            )}
+                            <Reorder.Item
+                                key={card.instanceId}
+                                value={card}
+                                className="cursor-grab active:cursor-grabbing"
+                            >
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>{card.title}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ul className="list-disc list-inside">
+                                            {card.description.map((item, index) => (
+                                                <li key={index}>{item}</li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            </Reorder.Item>
                         </div>
-                    </SortableContext>
-                )}
-            </div>
+                    ))}
+                    {isDraggingFromLeft && previewIndex === droppedCards.length && (
+                        <div className="h-[100px] bg-primary/10 border-2 border-dashed border-primary rounded-lg transition-all" />
+                    )}
+                </Reorder.Group>
+            )}
         </div>
     );
-}
+};
