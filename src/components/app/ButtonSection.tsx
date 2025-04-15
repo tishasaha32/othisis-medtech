@@ -2,7 +2,7 @@ import { Button } from "../ui/button"
 
 const ButtonSection = () => {
     return (
-        <div className="flex justify-end gap-4 pr-20 mb-3">
+        <div className="flex justify-end gap-4 pr-20 my-3">
             <Button variant="outline" className="border-black">
                 Send Referral
             </Button>

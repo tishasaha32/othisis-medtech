@@ -8,13 +8,16 @@ function App() {
   return (
     <DndProvider backend={HTML5Backend}>
       <BrowserRouter>
-        <div className="flex">
+        <div className="hidden md:flex">
           <Sidebar />
           <div className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
             </Routes>
           </div>
+        </div>
+        <div className="flex justify-center items-center h-screen md:hidden">
+          <p className="text-2xl text-center font-bold">Please use a desktop device to access this application</p>
         </div>
       </BrowserRouter>
     </DndProvider>

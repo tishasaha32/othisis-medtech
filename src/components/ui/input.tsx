@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ className, endContent,
   return (
     <div
       className={cn(
-        "flex h-12 w-full bg-gray-100 items-center justify-center gap-2 rounded-xl px-3 py-2 ring-offset-background has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 has-[:focus]:ring-2 has-[:focus]:ring-ring has-[:focus]:ring-offset-2",
+        "flex h-12 w-full bg-[#F2F2F2] items-center justify-center gap-2 rounded-xl px-3 py-2 ring-offset-background has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 has-[:focus]:ring-2 has-[:focus]:ring-ring has-[:focus]:ring-offset-2",
         className
       )}
     >

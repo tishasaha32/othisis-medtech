@@ -106,11 +106,11 @@ export const SelectedTemplates = () => {
     return (
         <div
             ref={drop as unknown as RefObject<HTMLDivElement>}
-            className={`w-full md:w-2/3 bg-gray-200 h-[calc(100vh-10rem)] rounded-lg p-4 transition-colors ${isOver ? "bg-muted/50" : ""
+            className={`w-full md:w-3/4 bg-[#E3E3E3] h-[calc(100vh-10rem)] rounded-lg p-4 transition-colors ${isOver ? "bg-muted/50" : ""
                 }`}
         >
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl flex items-center gap-2 font-semibold">
+                <h2 className="text-2xl flex items-center gap-2 font-semibold">
                     Root Canal
                     <Info className="w-6 h-6" />
                 </h2>
@@ -141,7 +141,7 @@ export const SelectedTemplates = () => {
                         <div key={card.instanceId} data-card-index={index}>
                             {isDraggingFromLeft && previewIndex === index && hoveredItem && (
                                 <div className="mb-2">
-                                    <Card className="p-2 bg-gray-100 opacity-50">
+                                    <Card className="p-2 bg-[#ECECEC]">
                                         <CardHeader className="p-2 pb-0">
                                             <CardTitle>{hoveredItem.title}</CardTitle>
                                         </CardHeader>
@@ -160,7 +160,7 @@ export const SelectedTemplates = () => {
                                 value={card}
                                 className="cursor-grab active:cursor-grabbing"
                             >
-                                <Card className="p-2 bg-gray-100">
+                                <Card className="p-2 bg-[#ECECEC]">
                                     <CardHeader className="p-2 pb-0">
                                         <CardTitle>{card.title}</CardTitle>
                                     </CardHeader>
@@ -177,7 +177,7 @@ export const SelectedTemplates = () => {
                     ))}
                     {isDraggingFromLeft && previewIndex === droppedCards.length && hoveredItem && (
                         <div>
-                            <Card className="p-2 bg-gray-100 opacity-50">
+                            <Card className="p-2 bg-[#ECECEC] bg-opacity-50">
                                 <CardHeader className="p-2 pb-0">
                                     <CardTitle>{hoveredItem.title}</CardTitle>
                                 </CardHeader>
