@@ -1,6 +1,6 @@
 import { useDrop } from "react-dnd";
 import { Reorder } from "framer-motion";
-import { useState, RefObject } from "react";
+import { useState, RefObject, useRef, useEffect } from "react";
 import type { CardItem } from "@/components/app/DraggableCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FilePlus, Info, Mic, Trash2, Upload } from "lucide-react";
@@ -15,6 +15,34 @@ export const SelectedTemplates = () => {
     const [previewIndex, setPreviewIndex] = useState<number | null>(null);
     const [isDraggingFromLeft, setIsDraggingFromLeft] = useState(false);
     const [hoveredItem, setHoveredItem] = useState<CardItem | null>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
+
+    const startAutoScroll = (direction: 'up' | 'down') => {
+        if (autoScrollInterval.current) {
+            clearInterval(autoScrollInterval.current);
+        }
+
+        autoScrollInterval.current = setInterval(() => {
+            if (scrollContainerRef.current) {
+                const scrollAmount = direction === 'up' ? -10 : 10;
+                scrollContainerRef.current.scrollTop += scrollAmount;
+            }
+        }, 16); // ~60fps
+    };
+
+    const stopAutoScroll = () => {
+        if (autoScrollInterval.current) {
+            clearInterval(autoScrollInterval.current);
+            autoScrollInterval.current = null;
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            stopAutoScroll();
+        };
+    }, []);
 
     const [{ isOver }, drop] = useDrop({
         accept: "CARD",
@@ -40,9 +68,24 @@ export const SelectedTemplates = () => {
                 }
 
                 setPreviewIndex(newIndex);
+
+                // Auto-scroll logic
+                if (scrollContainerRef.current && mouseY) {
+                    const containerRect = scrollContainerRef.current.getBoundingClientRect();
+                    const scrollThreshold = 50; // pixels from top/bottom to start scrolling
+
+                    if (mouseY < containerRect.top + scrollThreshold) {
+                        startAutoScroll('up');
+                    } else if (mouseY > containerRect.bottom - scrollThreshold) {
+                        startAutoScroll('down');
+                    } else {
+                        stopAutoScroll();
+                    }
+                }
             }
         },
         drop: (item: CardItem & { source: "left" | "right" }) => {
+            stopAutoScroll();
             const instanceId = `${item.id}-${Date.now()}`;
             const insertAt = previewIndex !== null ? previewIndex : droppedCards.length;
             const newCard: CardInstance = { ...item, instanceId };
@@ -92,6 +135,7 @@ export const SelectedTemplates = () => {
                     values={droppedCards}
                     onReorder={setDroppedCards}
                     className="flex flex-col gap-3 bg-white p-6 h-[calc(100vh-15rem)] overflow-y-scroll"
+                    ref={scrollContainerRef}
                 >
                     {droppedCards.map((card, index) => (
                         <div key={card.instanceId} data-card-index={index}>
